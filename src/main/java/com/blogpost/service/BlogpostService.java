@@ -3,6 +3,7 @@ package com.blogpost.service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,6 +52,14 @@ public class BlogpostService {
 		return post;
 	}
 
+	public List<CategoryEntity> getcategory (){
+		return categoryRepository.findAll();
+	}
+	
+	public List<PostsEntity> getposts(){
+		return postRepository.findAll();
+	}
+	
 	private Set<CategoryEntity> buildCategories(PostInput post, PostsEntity pe) {
 		Set<CategoryEntity> ceSet = new HashSet<CategoryEntity>();
 

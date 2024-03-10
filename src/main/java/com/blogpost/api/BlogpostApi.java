@@ -1,5 +1,7 @@
 package com.blogpost.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blogpost.entity.CategoryEntity;
+import com.blogpost.entity.PostsEntity;
 import com.blogpost.model.Post;
 import com.blogpost.model.PostInput;
 import com.blogpost.service.BlogpostService;
@@ -30,5 +34,15 @@ public class BlogpostApi {
 	public ResponseEntity<Post> getBlog() {
 
 		return new ResponseEntity<Post>(HttpStatus.OK);
+	}
+	
+	@GetMapping(produces="application/json", path="/getcategory")
+	public List<CategoryEntity> getcategorydetails() {
+		return blogpostService.getcategory();
+	}
+	
+	@GetMapping(produces="application/json", path="/getposts")
+	public List<PostsEntity> getpostsdetails(){
+		return blogpostService.getposts();
 	}
 }
