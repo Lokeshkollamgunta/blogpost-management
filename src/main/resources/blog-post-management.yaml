@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Blog Post Management API
+  version: 1.0.0
+  description: API for managing blog posts including CRUD operations.
+servers:
+  - url: https://api.example.com/v1
+paths:
+  /posts:
+    get:
+      summary: Retrieve all blog posts
+      responses:
+        '200':
+          description: A list of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+    post:
+      summary: Create a new blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+  /posts/{postId}:
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: The ID of the blog post
+    get:
+      summary: Retrieve a specific blog post
+      responses:
+        '200':
+          description: The requested blog post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Blog post not found
+    put:
+      summary: Update a specific blog post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostInput'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Blog post not found
+    delete:
+      summary: Delete a specific blog post
+      responses:
+        '204':
+          description: No content
+        '404':
+          description: Blog post not found
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the blog post
+        title:
+          type: string
+          description: The title of the blog post
+        content:
+          type: string
+          description: The content of the blog post
+        author:
+          type: string
+          description: The author of the blog post
+        publication_date:
+          type: string
+          format: date-time
+          description: The publication date of the blog post
+        categories:
+          type: array
+          items:
+            type: string
+          description: The categories associated with the blog post
+      required:
+        - title
+        - content
+        - author
+        - publication_date
+    PostInput:
+      type: object
+      required:
+        - title
+        - content
+        - author
+        - publication_date
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: The title of the blog post (1-100 characters)
+        content:
+          type: string
+          minLength: 1
+          description: The content of the blog post (minimum 1 character)
+        author:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The author of the blog post (1-50 characters)
+        publication_date:
+          type: string
+          format: date-time
+          description: The publication date of the blog post
+        categories:
+          type: array
+          items:
+            type: string
+          description: The categories associated with the blog post
