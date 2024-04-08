@@ -1,5 +1,6 @@
 package com.blogpost.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface PostRepository extends JpaRepository<PostsEntity, String> {
 	public Optional<PostsEntity> findByAuthor(String author);
 
 	public Optional<PostsEntity> findByContent(String postContent);
+	
+	 List<PostsEntity> findByContentContaining(String keyword);
 }

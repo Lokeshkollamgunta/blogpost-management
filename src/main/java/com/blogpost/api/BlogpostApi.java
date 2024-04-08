@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpost.entity.PostsEntity;
@@ -33,7 +34,7 @@ public class BlogpostApi {
 		return new ResponseEntity<Post>(post, HttpStatus.CREATED);
 	}
 
-	// get podts by id
+	// get posts by id
 	@GetMapping(produces = "application/json", path = "/posts/{postId}")
 	public ResponseEntity<Post> getBlog(@PathVariable(name = "postId") String postId) {
 		Post post = blogpostService.getPost(postId);
@@ -48,11 +49,12 @@ public class BlogpostApi {
 	}
 	
 	//search by content
-	@GetMapping(produces="application/json", path="/posts/getbycontent/{postContent}")
-	public ResponseEntity<Post> getbyContent(@PathVariable(name="postContent") String postContent){
-		Post post = blogpostService.getpostByContent(postContent);
-		return new ResponseEntity<Post>(post, HttpStatus.OK);
+	@GetMapping("/search")
+	public List<PostsEntity> searchbykeyword(@RequestParam String keyword){
+		return blogpostService.searchbycontent(keyword);
 	}
+	
+	
 	
 	@PutMapping(produces = "application/json", consumes = "application/json", path = "/posts/{postId}")
 	public ResponseEntity<Post> updateBlog(@PathVariable(name = "postId") String postId, @Valid @RequestBody PostInput request) {

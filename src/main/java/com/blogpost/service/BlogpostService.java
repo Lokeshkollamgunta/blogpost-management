@@ -2,6 +2,7 @@ package com.blogpost.service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -101,17 +102,17 @@ public class BlogpostService {
 	}
 	
 	//search by content
-	public Post getpostByContent(String postContent) {
-		Optional<PostsEntity> postOptional = postRepository.findByContent(postContent);
-		
-		if(postOptional.isPresent()) {
-			PostsEntity pe = postOptional.get();
-			return buildPostObj(pe);
-		}else {
-			return null;
-		}
+	
+	public List<PostsEntity> searchbycontent(String keyword){
+		List<PostsEntity> posts =postRepository.findByContentContaining(keyword);
+		//return postRepository.findByContentContaining(keyword);
+		if(posts.isEmpty()) {
+            System.out.println("No posts found containing the keyword: " + keyword);
+        }
+        return posts;
 	}
-
+	
+	
 	private Post buildPostObj(PostsEntity pe) {
 		Post post = new Post();
 		post.setAuthor(pe.getAuthor());
@@ -146,5 +147,11 @@ public class BlogpostService {
 		postRepository.deleteById(postId);
 
 	}
+
+
+	
+
+
+	
 
 }
