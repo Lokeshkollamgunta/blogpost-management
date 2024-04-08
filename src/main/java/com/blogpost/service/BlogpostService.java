@@ -2,6 +2,7 @@ package com.blogpost.service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,8 @@ public class BlogpostService {
 
 	}
 
+	
+	// post
 	private Post buildPost(PostsEntity pe, PostInput postInput) {
 		Post post = new Post();
 		post.setAuthor(pe.getAuthor());
@@ -56,9 +59,14 @@ public class BlogpostService {
 		return post;
 	}
 
+	// get all posts
 	public List<PostsEntity> getposts() {
 		return postRepository.findAll();
 	}
+	
+//	public List<PostsEntity> getPostsByAuthor(){
+//		return postRepository.findAll();
+//	}
 
 	private Set<CategoryEntity> buildCategories(PostInput post, PostsEntity pe) {
 		Set<CategoryEntity> ceSet = new HashSet<CategoryEntity>();
@@ -74,12 +82,37 @@ public class BlogpostService {
 		return ceSet;
 	}
 
+	// get post by id
 	public Post getPost(String postId) {
 		Optional<PostsEntity> postOptional = postRepository.findById(postId);
 		PostsEntity pe = postOptional.get();
 		return buildPostObj(pe);
 	}
-
+	
+	// search by author name
+	public Post getpostByauthorname(String postAuthor) {
+		Optional<PostsEntity> postOptional = postRepository.findByAuthor(postAuthor);
+		
+		if(postOptional.isPresent()) {
+		PostsEntity pe = postOptional.get();
+		return buildPostObj(pe);
+		}else {
+			return null;
+		}
+	}
+	
+	//search by content
+	
+	public List<PostsEntity> searchbycontent(String keyword){
+		List<PostsEntity> posts =postRepository.findByContentContaining(keyword);
+		//return postRepository.findByContentContaining(keyword);
+		if(posts.isEmpty()) {
+            System.out.println("No posts found containing the keyword: " + keyword);
+        }
+        return posts;
+	}
+	
+	
 	private Post buildPostObj(PostsEntity pe) {
 		Post post = new Post();
 		post.setAuthor(pe.getAuthor());
@@ -92,6 +125,8 @@ public class BlogpostService {
 		return post;
 	}
 	
+	
+	 // update post by id
 	public Post updatePost(String postId, @Valid PostInput post) {
 
 		PostsEntity pe = new PostsEntity();
@@ -107,9 +142,16 @@ public class BlogpostService {
 
 	}
 
+	//delete post by id
 	public void deletePost(String postId) {
 		postRepository.deleteById(postId);
 
 	}
+
+
+	
+
+
+	
 
 }

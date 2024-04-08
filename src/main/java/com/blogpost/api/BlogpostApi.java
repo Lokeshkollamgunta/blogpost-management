@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpost.entity.PostsEntity;
@@ -26,17 +27,34 @@ public class BlogpostApi {
 	@Autowired
 	private BlogpostService blogpostService;
 
+	// posts data
 	@PostMapping(consumes = "application/json", produces = "application/json", path = "/posts")
 	public ResponseEntity<Post> createBlog(@Valid @RequestBody PostInput request) {
 		Post post = blogpostService.savePost(request);
 		return new ResponseEntity<Post>(post, HttpStatus.CREATED);
 	}
 
+	// get posts by id
 	@GetMapping(produces = "application/json", path = "/posts/{postId}")
 	public ResponseEntity<Post> getBlog(@PathVariable(name = "postId") String postId) {
 		Post post = blogpostService.getPost(postId);
 		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
+	
+	// search by using author
+	@GetMapping(produces="application/json", path="/posts/get/{postAuthor}")
+	public ResponseEntity<Post> getbyAuthor(@PathVariable(name="postAuthor") String postAuthor){
+		Post post = blogpostService.getpostByauthorname(postAuthor);
+		return new ResponseEntity<Post>(post, HttpStatus.OK);
+	}
+	
+	//search by content
+	@GetMapping("/search")
+	public List<PostsEntity> searchbykeyword(@RequestParam String keyword){
+		return blogpostService.searchbycontent(keyword);
+	}
+	
+	
 	
 	@PutMapping(produces = "application/json", consumes = "application/json", path = "/posts/{postId}")
 	public ResponseEntity<Post> updateBlog(@PathVariable(name = "postId") String postId, @Valid @RequestBody PostInput request) {
@@ -45,13 +63,14 @@ public class BlogpostApi {
 		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 
+	// Delete post by id
 	@DeleteMapping( path = "/posts/{postId}")
 	public ResponseEntity<?> deleteBlog(@PathVariable(name = "postId") String postId) {
 		blogpostService.deletePost(postId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	
+	// get All posts from the table
 	@GetMapping(produces="application/json", path="/posts")
 	public List<PostsEntity> getAllPosts(){
 		return blogpostService.getposts();
