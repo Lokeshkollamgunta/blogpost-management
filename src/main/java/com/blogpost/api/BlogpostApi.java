@@ -34,7 +34,7 @@ public class BlogpostApi {
 
 	@GetMapping(produces = "application/json", path = "/posts/{postId}")
 	public ResponseEntity<Post> getBlog(@PathVariable(name = "postId") String postId) {
-		Post post = blogpostService.getPost(postId);
+		Post post = blogpostService.getPost(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 		return new ResponseEntity<Post>(post, HttpStatus.OK);
 	}
 	

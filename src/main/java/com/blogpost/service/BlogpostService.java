@@ -45,53 +45,16 @@ public class BlogpostService {
 
 	}
 
-	private Post buildPost(PostsEntity pe, PostInput postInput) {
-		Post post = new Post();
-		post.setAuthor(pe.getAuthor());
-		post.setCategories(postInput.getCategories());
-		post.setContent(pe.getContent());
-		post.setId(pe.getId());
-		post.setPublicationDate(pe.getPublicationDate().toString());
-		post.setTitle(pe.getTitle());
-		return post;
-	}
-
 	public List<PostsEntity> getposts() {
 		return postRepository.findAll();
 	}
 
-	private Set<CategoryEntity> buildCategories(PostInput post, PostsEntity pe) {
-		Set<CategoryEntity> ceSet = new HashSet<CategoryEntity>();
-
-		for (String category : post.getCategories()) {
-			CategoryEntity ce = new CategoryEntity();
-			ce.setName(category);
-			Set<PostsEntity> peSet = new HashSet<PostsEntity>();
-			peSet.add(pe);
-			ceSet.add(ce);
-		}
-
-		return ceSet;
-	}
-
-	public Post getPost(String postId) {
+	public Optional<Post> getPost(String postId) {
 		Optional<PostsEntity> postOptional = postRepository.findById(postId);
 		PostsEntity pe = postOptional.get();
-		return buildPostObj(pe);
+		return Optional.of(buildPostObj(pe));
 	}
 
-	private Post buildPostObj(PostsEntity pe) {
-		Post post = new Post();
-		post.setAuthor(pe.getAuthor());
-		Set<String> categories = pe.getCategories().stream().map(CategoryEntity::getName).collect(Collectors.toSet());
-		post.setCategories(categories);
-		post.setContent(pe.getContent());
-		post.setId(pe.getId());
-		post.setPublicationDate(pe.getPublicationDate().toString());
-		post.setTitle(pe.getTitle());
-		return post;
-	}
-	
 	public Post updatePost(String postId, @Valid PostInput post) {
 
 		PostsEntity pe = new PostsEntity();
@@ -110,6 +73,43 @@ public class BlogpostService {
 	public void deletePost(String postId) {
 		postRepository.deleteById(postId);
 
+	}
+
+	private Post buildPost(PostsEntity pe, PostInput postInput) {
+		Post post = new Post();
+		post.setAuthor(pe.getAuthor());
+		post.setCategories(postInput.getCategories());
+		post.setContent(pe.getContent());
+		post.setId(pe.getId());
+		post.setPublicationDate(pe.getPublicationDate().toString());
+		post.setTitle(pe.getTitle());
+		return post;
+	}
+
+	private Set<CategoryEntity> buildCategories(PostInput post, PostsEntity pe) {
+		Set<CategoryEntity> ceSet = new HashSet<CategoryEntity>();
+
+		for (String category : post.getCategories()) {
+			CategoryEntity ce = new CategoryEntity();
+			ce.setName(category);
+			Set<PostsEntity> peSet = new HashSet<PostsEntity>();
+			peSet.add(pe);
+			ceSet.add(ce);
+		}
+
+		return ceSet;
+	}
+
+	private Post buildPostObj(PostsEntity pe) {
+		Post post = new Post();
+		post.setAuthor(pe.getAuthor());
+		Set<String> categories = pe.getCategories().stream().map(CategoryEntity::getName).collect(Collectors.toSet());
+		post.setCategories(categories);
+		post.setContent(pe.getContent());
+		post.setId(pe.getId());
+		post.setPublicationDate(pe.getPublicationDate().toString());
+		post.setTitle(pe.getTitle());
+		return post;
 	}
 
 }
